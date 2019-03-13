@@ -1,0 +1,164 @@
+ <!DOCTYPE html>
+ <html>
+ <head>
+     <meta charset="utf-8" />
+     <meta name="referrer" content="never"><!-- 去掉请求头部中的 Referer 主要是避免做了防盗的链接屏蔽访问 -->
+     <meta http-equiv="Content-Type" content="application/json; charset=UTF-8">
+     <!--网页标题左侧显示-->
+     <link rel="icon" href="images/cat08.png" type="image/x-icon">
+     <!--收藏夹显示图标-->
+     <link rel="shortcut icon" href="images/cat08.png" type="image/x-icon">
+     <title>猫8(￣３￣)a专业的吸猫场所</title>
+     <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+     <script src="https://cdn.bootcss.com/jquery-mobile/1.4.5/jquery.mobile.min.js"></script>
+     <link href="css/shape_v1.4.css" rel="stylesheet">
+     <link href="css/public_v1.4.css" rel="stylesheet">
+     <link href="css/chat_v1.1.css" rel="stylesheet">
+     <link href="https://cdn.bootcss.com/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+     <script src="https://cdn.bootcss.com/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+     <style>
+         body{background-size:cover;background-color:#a2a2a2;background-image: url()}
+     </style>
+ </head>
+ <body>
+        <div style="bottom: 50px;top: 0px;left: 0px;right: 0px;position: absolute;">
+            <!-- 搜索 -->
+            <div style="position:absolute;top: 160px;left: 345px;width: 650px;">
+                <ul id="query-tabs" class="nav nav-tabs">
+                     <li><a href="#bing" id="bingtab" data-toggle="tab"><img src="images/bing.png" height="20px;" width="55px;"/></a></li>
+                     <li><a href="#baidu" id="baidutab" data-toggle="tab"><img src="images/baidu.png" height="20px;" width="55px;"/></a></li>
+                     <li><a href="#google" id="googletab" data-toggle="tab"><img src="images/google.png" height="20px;" width="55px;"/></a></li>
+                     <li><a href="#cat08" id="cat08tab" data-toggle="tab"><img src="images/cat08.png" height="20px;" width="55px;"/></a></li>
+                </ul>
+                <div class="tab-content" style="margin-top: 1px;">
+                    <div class="tab-pane fade" id="bing" style="position:relative;height: auto;width: 100%;">
+                        <form action="https://cn.bing.com/search" id="search_bing_value" target="_blank">
+                            <div class="input-group">
+                                <input type="text" class="form-control" baiduSug="1" name="q" placeholder="请输入你要搜索的内容" />
+                                <span class="input-group-addon" id="search_bing"><img src="images/search.png"  width="20px;"></span>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="tab-pane fade" id="baidu" style="position:relative;height: auto;width: 100%;">
+                        <form action="https://www.baidu.com/baidu" id="search_baidu_value" target="_blank">
+                            <div class="input-group">
+                                    <input type="text" class="form-control" baiduSug="1" name="word" placeholder="百度一下吧"/>
+                                    <span class="input-group-addon" id="search_baidu"><img src="images/search.png"  width="20px;"></span>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="tab-pane fade" id="google" style="position:relative;height: auto;width: 100%;">
+                        <form method="get" id="search_google_value" action="https://www.google.co.in/search" target="_blank">
+                            <div class="input-group">
+                                    <input type="text" class="form-control" name="as_q" baiduSug="1" placeholder="谷歌一下吧"/> 
+                                    <span class="input-group-addon" id="search_google"><img src="images/search.png"  width="20px;"></span>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="tab-pane fade" id="cat08" style="position:relative;height: auto;width: 100%;">
+                            <div class="input-group">
+                                    <input type="text" class="form-control" name="cat08_value" placeholder="喵一下吧 ~"/>
+                                    <span class="input-group-addon" id="search_cat08"><img src="images/search.png"  width="20px;"></span>
+                            </div>
+                    </div>
+                </div>
+            </div>
+            <!-- 展示 -->
+            <div class="cat08show style-3" style="display: none;"></div>
+            <!-- 类型导航栏 -->
+            <ul class="typenav btn-group" style="display: none;" data-toggle="buttons">
+                <li>
+                    <label class="btn">
+                        <input type="radio" name="searchTypes" value="all" checked> 综合
+                    </label>
+                </li>
+                <li>
+                    <label class="btn">
+                        <input type="radio" name="searchTypes" value="video"> 视频
+                    </label>
+                </li>
+                <li>
+                    <label class="btn">
+                        <input type="radio" name="searchTypes" value="article"> 文章
+                    </label>
+                </li>
+                <li>
+                    <label class="btn">
+                        <input type="radio" name="searchTypes" value="minvideo"> 小视频
+                    </label>
+                </li>
+            </ul>
+        </div>
+        <!-- 底部备案,公告,赞助,等信息 -->
+        <div style="position: absolute;bottom: 0px;left: 0px;right: 0px;color: #FFFFFF;height: 50px;line-height: 50px;" align="right">
+                <table style="margin-right: 20px;" class="bottom_table">
+                    <tr>
+                        <td><div class="circle" title="通知" id="showTongzhi"><img src="images/tongzhi.png"/></div></td>
+                        <td><div class="circle" title="背景信息" id="showBackgroundInfo"><img src="images/backgroundInfo.png"/></div></td>
+                        <td><div class="circle" title="赞助" id="showZanzhu"><img src="images/erweima.png"/></div></td>
+                        <td><div class="circle" title="设置为主页" id="setHome"><img src="images/home.png"/></div></td>
+                    </tr>
+                </table>
+        </div>
+
+        <!-- 展示弹出框,只是用来显示的 -->
+        <div class="modal fade" id="showModal" tabindex="-1" role="dialog"  data-backdrop="static" aria-labelledby="showModalLabel" aria-hidden="true">
+            <div class="modal-dialog" style="width:900px;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title" name="showTitle"></h4>
+                    </div>
+                    <div class="modal-body style-3" name="showBody" style="overflow :auto;max-height: 600px;"></div>
+                </div>
+            </div>
+        </div>
+        <!-- 视频播放弹框 -->
+        <div class="modal fade" id="videoModal" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="videoModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h6 class="modal-title" name="title"></h6>
+                    </div>
+                    <div class="modal-body">
+                        <video name="video" width="100%" height="100%" src="" preload="auto" autoplay="" controls="" class="embed-responsive-item"></video>
+                    </div>
+                    <div class="modal-header">
+                        <a name="videoUrl" href="" target="_blank">喜欢这个视频就点击跳转到作者发布的网站上关注一下吧~</a>
+                        <div name="desc"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <img src="images/loading.gif" style="position:fixed;top: 50%; left: 50%;display: none;" id="loadinggif"/>
+ </body>
+ <!-- 百度搜索框提示 -->
+ <script charset="gbk" src="https://www.opensug.org/js/opensug.js"></script><!--不使用百度的,因为百度的是http请求,不适用部署https-->
+ <script charset="utf-8" src="js/util_v1.5.js"></script>
+ <script charset="utf-8" src="js/request_v1.4.js"></script>
+ <script charset="utf-8" src="js/htmlTemplate_v1.4.js"></script>
+ <script charset="utf-8" src="js/search_v1.4.js"></script>
+ <script charset="utf-8" src="js/showInfo_v1.4.js"></script>
+ <script charset="utf-8" src="js/websocket_v1.1.js"></script>
+ <script charset="utf-8" src="js/webrtc_v1.1.js"></script>
+ <script charset="utf-8" src="js/chat_v1.1.js"></script>
+ <script>
+    //放到最后使用的js代码
+    $('#query-tabs li:eq(3) a').tab('show');//搜索框默认展示
+    cat08SearchGo(true);
+    //所有 百度搜索提示框 透明化
+    var ο0s = $(".ο0");
+    for(var i = 0; i < ο0s.length; i++){
+        $(ο0s[i]).css({color:'black',opacity:0.6});
+    }
+    //设置背景图片
+    var backInfo = getBingBackImgAndStoryUrl();
+    if(backInfo){
+        var body = $("body");
+        body.css("background-image","url("+backInfo["backImageUrl"]+")");
+        body.attr("currentDate",backInfo["currentDate"]);
+        body.attr("backImageTitle",backInfo["backImageTitle"]);
+    }
+ </script>
+ </html>
