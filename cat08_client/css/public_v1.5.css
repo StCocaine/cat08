@@ -81,6 +81,10 @@
     cursor: pointer;
     display: none;
 }
-.typenav li{
+.typenav>li{
     width: 100px;
+    color: #ffffff;
+}
+.typenav>li>label:hover{
+    color: #ffffff;
 }
