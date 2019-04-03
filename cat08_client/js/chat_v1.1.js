@@ -151,7 +151,7 @@ var chat_response = function(type,msg){
         }
         if(users.length == 0){//没有一个其他用户
             u.append('<li id="rct_con"><a href="javascript:void(0)">暂未有其他用户连接</a></li>');
-            u.append('<li id="rct_con"><a href="javascript:void(0)">可以开两个浏览器模拟使用</a></li>');
+            u.append('<li id="rct_con"><a href="javascript:void(0)">可以开两个浏览器模拟使用(暂时只支持谷歌)</a></li>');
             return;
         }
         for(var i in users){
