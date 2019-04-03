@@ -2,7 +2,7 @@
 $("body").append(
     '<div class="btn-group pull-right" style="margin-right: 20px;margin-top:20px;">'+
         '<button type="button" class="btn dropdown-toggle btn-sm " data-toggle="dropdown" style="opacity:0.6;">'+
-            '在线视频聊天 <span class="glyphicon glyphicon-align-justify"></span>'+
+            '在线视频聊天(只支持谷歌) <span class="glyphicon glyphicon-align-justify"></span>'+
         '</button>'+
         '<ul class="dropdown-menu" id="chat_socketCon" role="menu" id="chat_users">'+
             '<li id="rct_con"><a href="javascript:void(0)">未连接(点击连接获取用户列表)</a></li>'+
