@@ -1,5 +1,7 @@
 //在页面添加在线聊天功能入口,因为这是一个单独功能,所以使用动态代码,以后不要这个功能了直接去除掉chat.js引用就行
 $("html").append('<script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>');
+$("html").append('<script charset="utf-8" src="js/websocket_v1.1.js"></script>');
+$("html").append('<script charset="utf-8" src="js/webrtc_v1.1.js"></script>');
 $("body").append(
     '<div class="btn-group pull-right" style="margin-right: 20px;margin-top:20px;">'+
         '<button type="button" class="btn dropdown-toggle btn-sm " data-toggle="dropdown" style="opacity:0.6;">'+
