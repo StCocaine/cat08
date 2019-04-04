@@ -1,4 +1,5 @@
 //在页面添加在线聊天功能入口,因为这是一个单独功能,所以使用动态代码,以后不要这个功能了直接去除掉chat.js引用就行
+$("html").append('<script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>');
 $("body").append(
     '<div class="btn-group pull-right" style="margin-right: 20px;margin-top:20px;">'+
         '<button type="button" class="btn dropdown-toggle btn-sm " data-toggle="dropdown" style="opacity:0.6;">'+
@@ -96,7 +97,11 @@ var rtc = null;
  * 创建websocket
  */
 var chat_socketCon = function(){
-    var t_socket = createWebSocket("webrtc","ws://127.0.0.1:8080/cat08-websocket/",
+    if(chat_socket != null){
+        return;
+    }
+    chat_socket = 0;//相当于暂时锁住,防止点击太快创建两次socket
+    var t_socket = createWebSocket("webrtc","wss://www.cat08.com/cat08-websocket/",
     function(){//连接成功,向服务端发送身份
         chat_socket = t_socket;
         chat_sendMsg(0,"");
@@ -150,8 +155,9 @@ var chat_response = function(type,msg){
             li[i].remove();
         }
         if(users.length == 0){//没有一个其他用户
-            u.append('<li id="rct_con"><a href="javascript:void(0)">暂未有其他用户连接</a></li>');
-            u.append('<li id="rct_con"><a href="javascript:void(0)">可以开两个浏览器模拟使用(暂时只支持谷歌)</a></li>');
+            u.append('<li><a href="javascript:void(0)">暂未有其他用户连接</a></li>');
+            u.append('<li><a href="javascript:void(0)">可以开两个浏览器模拟使用(暂时只支持谷歌)</a></li>');
+            u.append('<li><a href="javascript:void(0)">不是第一次访问,请先清除浏览器文件缓存</a></li>');
             return;
         }
         for(var i in users){
@@ -197,11 +203,14 @@ var chat_response = function(type,msg){
             var ready = msg.substring(0,1);
             var uid = msg.substring(1,msg.length);
             if(ready == "1"){//对方同意对话,发起webrtc信令,建立webrtc连接
-                if(rtc == null){
-                    rtc = rtc_getTool(onmessage,onaddstream);
-                    rtc.createPeerConnection();
-                    rtc.sendOffer();
-                }
+                var dialogfor = $("#chat_dialogForOne");
+                dialogfor.find("label[name='name']").html(uid);
+                dialogfor.modal("show");
+                rtc = rtc_getTool(onmessage,onaddstream,function(){
+                    dialogfor.modal("hide");
+                });
+                rtc.createPeerConnection();
+                rtc.sendOffer();
             }else if(ready == "0"){
                 var bt = $("#u" + uid);
                 bt.html("申请对话");
@@ -210,32 +219,22 @@ var chat_response = function(type,msg){
             }
         }
     }else if(type == "4"){//收到服务端发过来的取消对话,或者关闭对话
+        $("#chat_dialog").modal('hide');
+        $("#chat_dialogForOne").modal("hide");
         var u = $("#u" + msg);
         u.html("申请对话");
         u.removeClass("btn-primary");
         u.addClass("btn-success");
         $("#chat_ready_id").html("");
-        $("#chat_dialog").modal('hide');
-        $("#chat_dialogForOne").modal("hide");
     }else if(type == "6"){//收到服务端发过来的 offer信令
         if(msg.length != 0){
             var json = JSON.parse(msg);
-            if(rtc == null){
-                rtc = rtc_getTool(onmessage,onaddstream);
-                rtc.createPeerConnection();
-                var dialogfor = $("#chat_dialogForOne");
-                dialogfor.find("label[name='name']").html(json.id);
-                dialogfor.modal("show");
-            }
             rtc.signallingHandle(json);
         }
     }else if(type == "7"){//收到服务端发过来的 answer信令
         if(msg.length != 0){
             var json = JSON.parse(msg);
             rtc.signallingHandle(json);
-            var dialogfor = $("#chat_dialogForOne");
-            dialogfor.find("label[name='name']").html(json.id);
-            dialogfor.modal("show");
         }
     }else if(type == "8"){//收到服务端发过来的 候选信令
         if(msg.length != 0){
@@ -250,11 +249,8 @@ var chat_response = function(type,msg){
  */
 $("#rct_con").on("click",function(e){
     e.stopPropagation();
-    if(chat_socket == null){
-        chat_socketCon();
-    }else{
-        chat_sendMsg(1,"");//请求获取其他在线用户的信息,排除掉自己
-    }
+    chat_socketCon();//并不是每次都创建
+    chat_sendMsg(1,"");//请求获取其他在线用户的信息,排除掉自己
 });
 
 var chat_sendClick = function(){
@@ -453,6 +449,14 @@ var chat_ready = function(i){
     var uid = $("#chat_ready_id").html();
     chat_sendMsg(3,i);//回复对方
     if(i == 1){//同意
+        var dialogfor = $("#chat_dialogForOne");
+        dialogfor.find("label[name='name']").html(uid);
+        dialogfor.modal("show");
+        rtc = rtc_getTool(onmessage,onaddstream,function(){
+            dialogfor.modal("hide");
+        });
+        rtc.createPeerConnection();
+        
         var uid = $("#chat_ready_id").html();
         var bt = $("#u" + uid);
         bt.html("取消对话");

@@ -1,6 +1,6 @@
-var rtc_getTool = function(onmessage,onaddstream){
-    //兼容不同浏览器客户端之间的连接
-    var PeerConnection = (window.PeerConnection || window.webkitPeerConnection00 || window.webkitRTCPeerConnection || window.mozRTCPeerConnection);
+var rtc_getTool = function(onmessage,onaddstream,onclose){
+    //兼容不同浏览器客户端之间的连接,使用官方的兼用库 <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script><!--webrtc 兼容库-->
+    var PeerConnection = RTCPeerConnection;
     //兼容不同浏览器获取到用户媒体对象
     var getUserMedia = (navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.mediaDevices.getUserMedia);
     //兼容不同浏览器
@@ -25,6 +25,7 @@ var rtc_getTool = function(onmessage,onaddstream){
         pc.localChannel.onclose = function () {
             console.log("关闭数据传输通道");
             pc = null;
+            onclose();
         };
         pc.localChannel.onmessage = function(event){
             onmessage(event);
